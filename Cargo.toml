@@ -1,0 +1,32 @@
+[package]
+name = "rsomics-katz-centrality"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.91"
+description = "Katz centrality for biological networks — power-iteration port of networkx.katz_centrality"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/omics-rust/rsomics-katz-centrality"
+keywords = ["bioinformatics", "network", "centrality", "katz"]
+categories = ["science", "command-line-utilities"]
+
+[[bin]]
+name = "rsomics-katz-centrality"
+path = "src/main.rs"
+
+[lib]
+name = "rsomics_katz_centrality"
+path = "src/lib.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+tempfile = "3"
+
+[[bench]]
+name = "katz"
+harness = false
+
+[dev-dependencies.criterion]
+version = "0.5"
