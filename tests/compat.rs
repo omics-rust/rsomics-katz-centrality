@@ -412,6 +412,49 @@ fn gnm_15_30() {
     check(&result, GNM_GOLDEN, "gnm15_30");
 }
 
+// ── self-loops: nx keeps the diagonal term (one G[n] entry per self-loop) ────
+
+// "A B\nA C\nA A": A is the hub with a self-loop.
+#[rustfmt::skip]
+const SELFLOOP_HUB_GOLDEN: &[(&str, f64)] = &[
+    ("A", 6.46996620407571221e-01),
+    ("B", 5.39163877305027350e-01),
+    ("C", 5.39163877305027350e-01),
+];
+
+#[test]
+fn selfloop_hub() {
+    let result = run("A B\nA C\nA A\n", 0.1);
+    check(&result, SELFLOOP_HUB_GOLDEN, "selfloop_hub");
+}
+
+// "A B\nC C": C exists only via its self-loop — a real node, not a bare isolate.
+#[rustfmt::skip]
+const SELFLOOP_ISOLATED_GOLDEN: &[(&str, f64)] = &[
+    ("A", 5.77350269189625842e-01),
+    ("B", 5.77350269189625842e-01),
+    ("C", 5.77350269189625842e-01),
+];
+
+#[test]
+fn selfloop_isolated_node() {
+    let result = run("A B\nC C\n", 0.1);
+    check(&result, SELFLOOP_ISOLATED_GOLDEN, "selfloop_isolated");
+}
+
+// "A B\nA A": one edge plus a self-loop on A.
+#[rustfmt::skip]
+const SELFLOOP_EDGE_GOLDEN: &[(&str, f64)] = &[
+    ("A", 7.39940064185500068e-01),
+    ("B", 6.72672804127800283e-01),
+];
+
+#[test]
+fn selfloop_on_edge_endpoint() {
+    let result = run("A B\nA A\n", 0.1);
+    check(&result, SELFLOOP_EDGE_GOLDEN, "selfloop_edge");
+}
+
 // ── edge-case: parallel-edge dedup ───────────────────────────────────────────
 
 #[test]

@@ -82,7 +82,11 @@ impl Graph {
         let n = node_labels.len();
         let mut adj: Vec<Vec<usize>> = vec![Vec::new(); n];
         for (u, v) in pending {
-            if u != v {
+            if u == v {
+                // A self-loop is a single entry in nx.Graph's G[u], so the
+                // power iteration adds the diagonal term x[u] exactly once.
+                adj[u].push(u);
+            } else {
                 adj[u].push(v);
                 adj[v].push(u);
             }
