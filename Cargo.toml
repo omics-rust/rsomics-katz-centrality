@@ -1,6 +1,6 @@
 [package]
 name = "rsomics-katz-centrality"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 rust-version = "1.91"
 description = "Katz centrality for biological networks — power-iteration port of networkx.katz_centrality"

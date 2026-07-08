@@ -179,14 +179,15 @@ pub fn katz_centrality(g: &Graph, p: &KatzParams) -> Result<Vec<f64>, Convergenc
     })
 }
 
-/// Parse an edge-list text (stdin), skipping `#` comment lines and blanks.
+/// Parse an edge-list text (stdin), stripping `#` comments and blanks.
 /// Returns pairs of string labels in order of first appearance.
 pub fn parse_edge_list(input: &str) -> Vec<(String, String)> {
     input
         .lines()
         .filter_map(|line| {
-            let line = line.trim();
-            if line.is_empty() || line.starts_with('#') {
+            // nx.parse_edgelist strips a '#' comment anywhere in the line before tokenising.
+            let line = line.split('#').next().unwrap_or("").trim();
+            if line.is_empty() {
                 return None;
             }
             let mut parts = line.split_ascii_whitespace();
@@ -195,4 +196,16 @@ pub fn parse_edge_list(input: &str) -> Vec<(String, String)> {
             Some((u, v))
         })
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn inline_comment_matches_comment_free() {
+        let with_comment = parse_edge_list("0 1\n1 2#c\n2 3\n0 #x\n");
+        let clean = parse_edge_list("0 1\n1 2\n2 3\n");
+        assert_eq!(with_comment, clean);
+    }
 }
